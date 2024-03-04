@@ -42,21 +42,21 @@ RUN apt-get update --fix-missing \
     && apt-get autoremove --yes \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && addgroup --gid $GID $USER \
+    && addgroup --gid 1000 nonroot \
     && useradd \
       --create-home \
-      --home-dir /home/$USER \
+      --home-dir /home/nonroot \
       --system \
-      --uid $UID \
-      --gid $GID \
+      --uid 1000 \
+      --gid 1000 \
       --groups sudo \
       --shell /bin/bash \
-      $USER \
-    && echo "$USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER \
-    && chmod 0440 /etc/sudoers.d/$USER \
-    && chown -R $USER:$GID /home/$USER
+      nonroot \
+    && echo "nonroot ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nonroot \
+    && chmod 0440 /etc/sudoers.d/nonroot \
+    && chown -R nonroot:1000 /home/nonroot
 
-ENV HOME=/home/$USER
+ENV HOME=/home/nonroot
 
-USER $USER
+USER nonroot
 WORKDIR $HOME
